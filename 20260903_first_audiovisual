@@ -1,0 +1,25 @@
+setcpm (120/4)
+
+let drums = sound ("bd [hh hh] sd [hh hh] bd [hh hh] cp*2 [hh hh]") .bank("RolandTR909")
+let bass = note("<e2*4 c3*4 a2*4 g2*4 e2*4 c3*4 b2*4 f2*4>") 
+  .sound("triangle") .gain(2) .adsr(".01:.3:.2:.2")
+let piano = chord("<Em7 C Am7 G Em7 C Bm FM7 >") 
+  .voicing() .sound("piano") .room(1) .gain(0.5) .delay(0.7) .distort(0.5)
+let synth = note("<e e g b c e g b d e g b g e g b g c b a e g b a c g b a f g b a e a g b >*4") 
+  .sound("sawtooth") .room(1) .delay(0.5) .gain(0.6)
+  .lpf(400).lpa(0.1).lpd(0.5).lps(0.2).lpr(0.3).lpenv(4)
+
+$: arrange(
+  [4, drums],
+  [4, stack(drums, bass)],
+  [4, stack(drums, bass, piano)],
+  [64, stack(drums, bass, piano, synth)]
+)
+
+await initHydra()
+
+osc(H("30 60 90 120"),0.02,1)
+.mult(osc(H("5 10 20 40"),-0.1,1).modulate(noise(3,1)).rotate(0.7))
+.posterize([3,10,2].fast(0.5).smooth(1))
+.modulateRotate(o0,()=>mouse.x*0.003)
+.out()
