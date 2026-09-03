@@ -1,0 +1,19 @@
+setcpm(90/4)
+sound(`bd [hh*2 hh] sd [[ht lt] bd] bd*2 [hh hh] sd [hh*3 oh], 
+- - crow*2 - metal:0 - metal:3 -`) 
+
+setcpm(90/4)
+sound(`
+[-  -  oh - ] [-  -  -  - ] [-  -  -  - ] [-  -  -  - ],
+[hh hh -  - ] [hh -  hh - ] [hh -  hh - ] [hh -  hh - ],
+[-  -  -  - ] [cp -  -  - ] [-  -  -  - ] [cp -  -  - ],
+[bd -  -  - ] [-  -  -  bd] [-  -  bd - ] [-  -  -  bd]
+`)
+
+setcpm(140/4)
+sound(`
+[-  -  -  - ] [-  -  -  -   ] [-  -  -  -  ] [-  - [ht lt] -],
+[cr -  rd - ] [rd -  rd -   ] [rd -  rd -  ] [rd -  -  - ],
+[-  -  sd - ] [-  -  sd -   ] [-  -  sd  - ] [-  -  -  - ],
+[bd -  -  - ] [bd  -  -  bd] [bd -  -   - ] [bd  -  -  bd]
+`) .bank("RolandTR909")
