@@ -1,0 +1,11 @@
+setcpm (100/4)
+
+$: n(irand(10)) .segment(8)
+     .add("<[0,3,5] [2,4,6] [0,2,4] [1,3,6]>")
+     .sound("jazz") 
+     .lpf(wchoose([1000,3],[2000,1],[400,1],[5000,3]))
+     .adsr(".05:.2:.5:.25")
+     ._punchcard()     .color("cyan") ._scope()
+$: n(irand(20)) .segment(10)
+     .sound("sawtooth")
+     .color("magenta") ._scope()
