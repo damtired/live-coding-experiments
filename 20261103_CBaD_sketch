@@ -1,4 +1,4 @@
-//2026.11.03. Cherry Blossoms and Dandelions
+//2026.11.19. Cherry Blossoms and Dandelions
 
 //I remember how slow and weak your pulse was
 setcpm(60/4)
@@ -19,32 +19,66 @@ $: note("<a2 e2 g2 c2>*2").s("triangle").lpf(1200)
   .delay(0.5)
 
 //Breathe, breathe...
-$: s("<~ [hh hh] sd [hh hh]>*8")
+_$: s("<~ hh oh [hh hh]>*8")
   //Was it so hard for you to breathe?
-  .gain(0.5) .delay(0.5)
+  .gain(0.3) .delay(0.5)
   .bank("RolandTR808") 
-//Beat by beat...
-$: s("bd ~ bd ~") .bank("RolandTR808") .room(0.5)
+//Beat by beat,
+_$: s("bd ~ bd ~") .bank("RolandTR808") .analyze(0)
+  //your own hearbeat is the only sound you hear in the room.
+  //you slowly fade out...
+  .lpf(slider(40, 40, 1000))
+  //in the "Room of one's own"  
+  .room(1)
 
 //Count, count... From zero to zero.
-$: note("[0 1 3 5 7 6 4 2 3 4 2 5 6 7 1 0]*0.5") .s("sine") .scale("A4:major") .gain(0.2) .room(1) .delay(0.2) .lpf(sine.range(5000, 200))
-  //You teach me the vowels
-  //.vowel("<a e i u o>*8")
+//But your life never went so linear as you thought it should be.
+_$: note("[0 1 3 5 7 6 4 2 3 4 2 5 6 7 1 0]*0.5") 
+  .s("sine") .scale("A4:minor") .gain(0.2) .room(1) .delay(0.2) .lpf(sine.range(5000, 200))
+_$: s("gm_pad_poly") .gain(0.2) .n(irand(10))
+//You tought me the vowels of the foreign language, that you never learned yourself.
+  //it was never pronounced so perfectly with your tongue,
+  //your tongue, harshly trained for your mother tongue,
+  //tearing down the foreign language,
+   .segment(8)
+  //that's how you wished me to break out of the yellow small stinky room you were trapped in.
+  //and yes, here I am.
+  //speaking the vowels you taught me.
+  .vowel("<a e i u o>*4")
 
 
 //The pastor reads: "Let there be Light"
-await initHydra()
+await initHydra({detectAudio: true})
 
-// licensed with CC BY-NC-SA 4.0 https://creativecommons.org/licenses/by-nc-sa/4.0/
-// Galaxy Trip
-// by Rangga Purnama Aji
-// https://ranggapurnamaaji1.wixsite.com/portfolio
+// --- 오디오 분석 설정 ---
+a.setBins(4)       // fft[0]=저음(킥) ... fft[3]=고음(하이햇)
+a.setSmooth(0.8)   // 값이 덜 튀게
+a.show()        // 주파수 대역 미터 보면서 조정할 때 켜기
 
-shape(1,1)
-  .mult(voronoi(1000,2)
-  .blend(o0).luma())
-  .add(shape(3,0.125)
-       .rotate(1,1).mult(voronoi(1000,1).luma())
-       .rotate(1.5)).scrollX([0.1,-0.0625,0.005,0.00001],0)
-  .scrollY([0.1,-0.0625,0.005,0.00001],0)
-  .out()
+// --- 배경: 해질녘 분홍 하늘 ---
+gradient(0.8)
+  .color(0.8, 0.6, 0.9)
+  .saturate(0.4)
+  .out(o1)
+
+// --- 꽃잎 레이어 ---
+shape(70, 0.12, 0.2)            // 부드러운 원
+  .scale(1, 0.25, 1)            // 납작하게 → 꽃잎 모양
+  .repeat(5, 4)                 // 화면에 흩뿌리기
+  .rotate(() => Math.sin(time * 0.3) * 0.4)
+  .scrollX(() => time * 0.015)
+  .scrollY(() => time * 0.04)   // 떨어지는 방향 (반대면 부호 바꾸기)
+  .modulate(noise(1.5, 0.15), () => 0.04 + a.fft[3] * 1)  // 하이햇 → 바람에 흩날림
+  .scale(() => 1 + a.fft[0] * 0.35)                          // 킥 → 꽃잎이 부풀었다 줄어듦
+  .color(1, 0.6, 0.75)
+  .out(o2)
+
+// --- 합성 + 잔상(feedback) ---
+src(o1)
+  .layer(src(o2).luma(0.1))     // 꽃잎만 배경 위에 얹기
+  .blend(src(o0).scrollY(0.002), 0.7)  // 이전 프레임을 살짝 남겨서 꽃잎 궤적
+  .out(o0)
+
+render(o0)
+
+
