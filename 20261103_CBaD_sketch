@@ -1,0 +1,50 @@
+//2026.11.03. Cherry Blossoms and Dandelions
+
+//I remember how slow and weak your pulse was
+setcpm(60/4)
+
+
+//these are the words which have no functions...
+//I am trying to reconnect. That's why I am constantly on the internet.
+//The whole world feels like you. I live like I am always swimming and breathing inside you.
+//Sound as a wave, light as a wave... it's always waves.
+$: note("<a2 e2 g2 c2>*2").s("triangle").lpf(1200)
+  //You are a room with no doors.
+  .room(0.3)
+  //Your voices are always present.
+  .gain(0.5)
+  //Speaks to me from left and right side
+  .pan("<0 1>*2")
+  //It's echoed and disseminated, it comes back
+  .delay(0.5)
+
+//Breathe, breathe...
+$: s("<~ [hh hh] sd [hh hh]>*8")
+  //Was it so hard for you to breathe?
+  .gain(0.5) .delay(0.5)
+  .bank("RolandTR808") 
+//Beat by beat...
+$: s("bd ~ bd ~") .bank("RolandTR808") .room(0.5)
+
+//Count, count... From zero to zero.
+$: note("[0 1 3 5 7 6 4 2 3 4 2 5 6 7 1 0]*0.5") .s("sine") .scale("A4:major") .gain(0.2) .room(1) .delay(0.2) .lpf(sine.range(5000, 200))
+  //You teach me the vowels
+  //.vowel("<a e i u o>*8")
+
+
+//The pastor reads: "Let there be Light"
+await initHydra()
+
+// licensed with CC BY-NC-SA 4.0 https://creativecommons.org/licenses/by-nc-sa/4.0/
+// Galaxy Trip
+// by Rangga Purnama Aji
+// https://ranggapurnamaaji1.wixsite.com/portfolio
+
+shape(1,1)
+  .mult(voronoi(1000,2)
+  .blend(o0).luma())
+  .add(shape(3,0.125)
+       .rotate(1,1).mult(voronoi(1000,1).luma())
+       .rotate(1.5)).scrollX([0.1,-0.0625,0.005,0.00001],0)
+  .scrollY([0.1,-0.0625,0.005,0.00001],0)
+  .out()
